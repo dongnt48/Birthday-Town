@@ -22,31 +22,36 @@ export const Scene10Candle: React.FC<SceneProps> = ({
   const [isBlown, setIsBlown] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
-  const duration = 2200; // 2.2 seconds hold duration
+  const duration = 2000; // 2.0 seconds hold duration
+
+  const triggerBlow = () => {
+    setIsHolding(false);
+    setIsBlown(true);
+    setHoldProgress(100);
+    onPlayBlowSound();
+    onFlameWaver(0, 0);
+    onBlowSuccess();
+  };
 
   const handleStartHold = () => {
     if (isBlown) return;
     setIsHolding(true);
     startTimeRef.current = Date.now();
 
-    const interval = 30;
+    const interval = 25;
     timerRef.current = setInterval(() => {
       const elapsed = Date.now() - startTimeRef.current;
       const progress = Math.min(100, (elapsed / duration) * 100);
       setHoldProgress(progress);
 
       // Flame wavers more as progress increases
-      const waver = (progress / 100) * 1.5;
-      const intensity = Math.max(0.1, 1.0 - progress / 100);
+      const waver = (progress / 100) * 1.6;
+      const intensity = Math.max(0.05, 1.0 - progress / 100);
       onFlameWaver(waver, intensity);
 
       if (progress >= 100) {
         clearInterval(timerRef.current!);
-        setIsHolding(false);
-        setIsBlown(true);
-        onPlayBlowSound();
-        onFlameWaver(0, 0);
-        onBlowSuccess();
+        triggerBlow();
       }
     }, interval);
   };
@@ -60,6 +65,12 @@ export const Scene10Candle: React.FC<SceneProps> = ({
     setIsHolding(false);
     setHoldProgress(0);
     onFlameWaver(0, 1.0);
+  };
+
+  // Quick click fallback (smoothly auto-blows over 1s if user taps quickly)
+  const handleClick = () => {
+    if (isBlown || isHolding) return;
+    handleStartHold();
   };
 
   useEffect(() => {
@@ -132,6 +143,7 @@ export const Scene10Candle: React.FC<SceneProps> = ({
 
               {/* Hold Trigger Target */}
               <button
+                onClick={handleClick}
                 onMouseDown={handleStartHold}
                 onMouseUp={handleCancelHold}
                 onMouseLeave={handleCancelHold}
