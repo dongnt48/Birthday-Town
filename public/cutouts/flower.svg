@@ -1,0 +1,31 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="flower_glow" cx="200" cy="200" r="180" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#f472b6" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#f472b6" stop-opacity="0" />
+    </radialGradient>
+    <filter id="f_blur">
+      <feGaussianBlur stdDeviation="15" />
+    </filter>
+  </defs>
+  <circle cx="200" cy="200" r="160" fill="url(#flower_glow)" filter="url(#f_blur)" />
+  <!-- Stems -->
+  <path d="M200 320 Q 190 240, 160 180" stroke="#78716c" stroke-width="2.5" stroke-linecap="round" />
+  <path d="M200 320 Q 210 230, 240 170" stroke="#78716c" stroke-width="2.5" stroke-linecap="round" />
+  <path d="M200 320 Q 200 220, 200 150" stroke="#78716c" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Main Flower Petals -->
+  <circle cx="200" cy="140" r="22" fill="#fda4af" />
+  <circle cx="180" cy="130" r="18" fill="#f43f5e" fill-opacity="0.8" />
+  <circle cx="220" cy="130" r="18" fill="#fb7185" fill-opacity="0.9" />
+  <circle cx="200" cy="135" r="9" fill="#fef08a" />
+  <!-- Side Flower Left -->
+  <circle cx="155" cy="175" r="16" fill="#fed7aa" />
+  <circle cx="155" cy="175" r="6" fill="#ea580c" />
+  <!-- Side Flower Right -->
+  <circle cx="245" cy="165" r="16" fill="#ddd6fe" />
+  <circle cx="245" cy="165" r="6" fill="#7c3aed" />
+  <!-- Ribbon tie -->
+  <path d="M190 270 Q 200 260, 210 270 Q 200 280, 190 270 Z" fill="#fde047" />
+  <path d="M195 275 L 185 305" stroke="#fde047" stroke-width="2" />
+  <path d="M205 275 L 215 305" stroke="#fde047" stroke-width="2" />
+</svg>

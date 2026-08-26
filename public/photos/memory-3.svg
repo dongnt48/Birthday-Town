@@ -1,0 +1,28 @@
+<svg width="800" height="1000" viewBox="0 0 800 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="m3_sky" x1="0" y1="0" x2="800" y2="1000" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#081426" />
+      <stop offset="50%" stop-color="#142c4c" />
+      <stop offset="70%" stop-color="#2d4a70" />
+      <stop offset="100%" stop-color="#09121e" />
+    </linearGradient>
+    <radialGradient id="m3_glow" cx="400" cy="500" r="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#89c4f4" stop-opacity="0.7" />
+      <stop offset="50%" stop-color="#3b82f6" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#081426" stop-opacity="0" />
+    </radialGradient>
+    <filter id="m3_blur">
+      <feGaussianBlur stdDeviation="20" />
+    </filter>
+  </defs>
+  <rect width="800" height="1000" fill="url(#m3_sky)" />
+  <circle cx="400" cy="500" r="260" fill="url(#m3_glow)" filter="url(#m3_blur)" />
+  <!-- Ocean waves horizon -->
+  <path d="M0 640 Q 200 620, 400 640 T 800 640 L 800 1000 L 0 1000 Z" fill="#070e17" />
+  <path d="M0 700 Q 300 680, 600 710 T 800 700 L 800 1000 L 0 1000 Z" fill="#04080e" />
+  <!-- Star sparkles over ocean -->
+  <circle cx="320" cy="300" r="2" fill="#e0f2fe" />
+  <circle cx="500" cy="220" r="2.5" fill="#bae6fd" />
+  <circle cx="640" cy="360" r="1.5" fill="#ffffff" />
+  <rect x="24" y="24" width="752" height="952" rx="16" stroke="rgba(137, 196, 244, 0.25)" stroke-width="1.5" />
+</svg>

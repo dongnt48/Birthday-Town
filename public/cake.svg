@@ -1,0 +1,55 @@
+<svg width="600" height="600" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="cake_light" cx="300" cy="180" r="280" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fef08a" stop-opacity="0.5" />
+      <stop offset="50%" stop-color="#f59e0b" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="flame_glow" cx="300" cy="160" r="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="25%" stop-color="#fef08a" />
+      <stop offset="60%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#dc2626" stop-opacity="0" />
+    </radialGradient>
+    <filter id="c_blur">
+      <feGaussianBlur stdDeviation="12" />
+    </filter>
+  </defs>
+  <!-- Background Glow -->
+  <circle cx="300" cy="220" r="240" fill="url(#cake_light)" filter="url(#c_blur)" />
+
+  <!-- Cake Base Pedestal -->
+  <ellipse cx="300" cy="460" rx="190" ry="35" fill="#0f141c" stroke="rgba(245, 215, 127, 0.2)" stroke-width="2" />
+  <ellipse cx="300" cy="455" rx="170" ry="28" fill="#151b26" />
+
+  <!-- Lower Cake Tier -->
+  <path d="M160 380 C 160 430, 440 430, 440 380 L 440 430 C 440 470, 160 470, 160 430 Z" fill="#1b212f" stroke="rgba(245, 215, 127, 0.3)" stroke-width="1.5" />
+  <ellipse cx="300" cy="380" rx="140" ry="28" fill="#242c3d" />
+
+  <!-- Upper Cake Tier -->
+  <path d="M200 310 C 200 350, 400 350, 400 310 L 400 360 C 400 390, 200 390, 200 360 Z" fill="#283346" stroke="rgba(245, 215, 127, 0.35)" stroke-width="1.5" />
+  <ellipse cx="300" cy="310" rx="100" ry="22" fill="#323e54" />
+
+  <!-- Frosting drips / Pearl Decor -->
+  <circle cx="230" cy="315" r="4" fill="#fde68a" />
+  <circle cx="265" cy="322" r="4" fill="#fde68a" />
+  <circle cx="300" cy="325" r="5" fill="#fde68a" />
+  <circle cx="335" cy="322" r="4" fill="#fde68a" />
+  <circle cx="370" cy="315" r="4" fill="#fde68a" />
+
+  <!-- Candle Stick -->
+  <rect x="294" y="210" width="12" height="75" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1" />
+  <!-- Spiral Gold Band on Candle -->
+  <path d="M294 230 L 306 238" stroke="#f59e0b" stroke-width="2" />
+  <path d="M294 250 L 306 258" stroke="#f59e0b" stroke-width="2" />
+  <path d="M294 270 L 306 278" stroke="#f59e0b" stroke-width="2" />
+
+  <!-- Wick -->
+  <line x1="300" y1="210" x2="300" y2="195" stroke="#78350f" stroke-width="2.5" stroke-linecap="round" />
+
+  <!-- Flame (Rendered here as placeholder glow, active flame enhanced via WebGL/CSS) -->
+  <circle cx="300" cy="170" r="40" fill="url(#flame_glow)" filter="url(#c_blur)" />
+  <path d="M300 135 C 315 160, 312 185, 300 195 C 288 185, 285 160, 300 135 Z" fill="#fffbeb" />
+  <path d="M300 148 C 308 165, 306 180, 300 188 C 294 180, 292 165, 300 148 Z" fill="#fbbf24" />
+  <circle cx="300" cy="180" r="4" fill="#ffffff" />
+</svg>

@@ -1,0 +1,25 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="matcha_glow" cx="200" cy="200" r="180" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#84cc16" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#84cc16" stop-opacity="0" />
+    </radialGradient>
+    <filter id="m_blur">
+      <feGaussianBlur stdDeviation="15" />
+    </filter>
+  </defs>
+  <circle cx="200" cy="200" r="160" fill="url(#matcha_glow)" filter="url(#m_blur)" />
+  <!-- Ceramic Cup -->
+  <ellipse cx="200" cy="250" rx="90" ry="30" fill="#1b241c" />
+  <path d="M110 210 C 110 270, 290 270, 290 210 L 280 160 L 120 160 Z" fill="#2d3a2f" stroke="#a8c087" stroke-width="2" />
+  <!-- Matcha Foam surface -->
+  <ellipse cx="200" cy="165" rx="80" ry="24" fill="#65a30d" />
+  <ellipse cx="200" cy="165" rx="72" ry="20" fill="#84cc16" />
+  <!-- Latte art swirl -->
+  <path d="M170 165 C 190 150, 210 150, 230 165 C 215 175, 185 175, 170 165 Z" fill="#ecfccb" fill-opacity="0.85" />
+  <circle cx="200" cy="160" r="4" fill="#ffffff" />
+  <!-- Floating leaf & tea sparkles -->
+  <path d="M260 110 C 270 90, 290 100, 285 115 C 275 125, 255 120, 260 110 Z" fill="#a3e635" />
+  <circle cx="140" cy="120" r="3" fill="#bef264" fill-opacity="0.7" />
+  <circle cx="270" cy="240" r="2.5" fill="#bef264" fill-opacity="0.5" />
+</svg>
