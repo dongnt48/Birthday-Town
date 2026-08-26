@@ -14,11 +14,13 @@ class SoundEngine {
 
   private initContext() {
     if (!this.ctx && typeof window !== 'undefined') {
-      const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const AudioContextClass =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       this.ctx = new AudioContextClass();
 
       this.masterGain = this.ctx.createGain();
-      this.masterGain.gain.setValueAtTime(0.8, this.ctx.currentTime);
+      this.masterGain.gain.setValueAtTime(0.85, this.ctx.currentTime);
       this.masterGain.connect(this.ctx.destination);
     }
 
@@ -35,11 +37,11 @@ class SoundEngine {
     this.isAmbientPlaying = true;
     this.ambientGain = this.ctx.createGain();
     this.ambientGain.gain.setValueAtTime(0.001, this.ctx.currentTime);
-    this.ambientGain.gain.exponentialRampToValueAtTime(0.25, this.ctx.currentTime + 3.0);
+    this.ambientGain.gain.exponentialRampToValueAtTime(0.28, this.ctx.currentTime + 3.0);
     this.ambientGain.connect(this.masterGain);
 
-    // Warm ambient generative pad (F major 7 / C chord tones)
-    const baseFreqs = [174.61, 220.00, 261.63, 329.63]; // F3, A3, C4, E4
+    // Warm ambient generative pad (F major 7 / C chord tones: F3, A3, C4, E4, G4)
+    const baseFreqs = [174.61, 220.0, 261.63, 329.63, 392.0];
 
     baseFreqs.forEach((freq) => {
       if (!this.ctx || !this.ambientGain) return;
@@ -51,9 +53,9 @@ class SoundEngine {
       osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
 
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(400, this.ctx.currentTime);
+      filter.frequency.setValueAtTime(450, this.ctx.currentTime);
 
-      oscGain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+      oscGain.gain.setValueAtTime(0.18, this.ctx.currentTime);
 
       osc.connect(filter);
       filter.connect(oscGain);
@@ -85,11 +87,36 @@ class SoundEngine {
     osc.stop(this.ctx.currentTime + 0.4);
   }
 
+  public playChimeChord() {
+    this.initContext();
+    if (!this.ctx || !this.masterGain || this.isMuted) return;
+
+    const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6
+    notes.forEach((freq, index) => {
+      if (!this.ctx || !this.masterGain) return;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime + index * 0.08);
+
+      const startTime = this.ctx.currentTime + index * 0.08;
+      gain.gain.setValueAtTime(0.001, startTime);
+      gain.gain.linearRampToValueAtTime(0.2, startTime + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 1.2);
+
+      osc.connect(gain);
+      gain.connect(this.masterGain);
+
+      osc.start(startTime);
+      osc.stop(startTime + 1.25);
+    });
+  }
+
   public playWhoosh() {
     this.initContext();
     if (!this.ctx || !this.masterGain || this.isMuted) return;
 
-    // Filtered noise swoosh
     const bufferSize = this.ctx.sampleRate * 0.5;
     const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
     const data = buffer.getChannelData(0);
@@ -123,7 +150,6 @@ class SoundEngine {
     this.initContext();
     if (!this.ctx || !this.masterGain || this.isMuted) return;
 
-    // Breath / air release
     const bufferSize = this.ctx.sampleRate * 0.8;
     const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
     const data = buffer.getChannelData(0);
@@ -162,7 +188,7 @@ class SoundEngine {
     osc.frequency.setValueAtTime(150, this.ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.8);
 
-    oscGain.gain.setValueAtTime(0.6, this.ctx.currentTime);
+    oscGain.gain.setValueAtTime(0.65, this.ctx.currentTime);
     oscGain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.85);
 
     osc.connect(oscGain);
@@ -170,23 +196,23 @@ class SoundEngine {
     osc.start();
     osc.stop(this.ctx.currentTime + 0.9);
 
-    // 2. High frequency crackle sparkles
-    for (let k = 0; k < 5; k++) {
-      const delay = 0.1 + Math.random() * 0.4;
+    // 2. Sparkle crackles
+    for (let k = 0; k < 6; k++) {
+      const delay = 0.08 + Math.random() * 0.45;
       setTimeout(() => {
         if (!this.ctx || !this.masterGain || this.isMuted) return;
         const sparkOsc = this.ctx.createOscillator();
         const sparkGain = this.ctx.createGain();
 
         sparkOsc.type = 'sine';
-        sparkOsc.frequency.setValueAtTime(1200 + Math.random() * 800, this.ctx.currentTime);
-        sparkGain.gain.setValueAtTime(0.15, this.ctx.currentTime);
-        sparkGain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.15);
+        sparkOsc.frequency.setValueAtTime(1200 + Math.random() * 900, this.ctx.currentTime);
+        sparkGain.gain.setValueAtTime(0.18, this.ctx.currentTime);
+        sparkGain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.18);
 
         sparkOsc.connect(sparkGain);
         sparkGain.connect(this.masterGain);
         sparkOsc.start();
-        sparkOsc.stop(this.ctx.currentTime + 0.2);
+        sparkOsc.stop(this.ctx.currentTime + 0.22);
       }, delay * 1000);
     }
   }
@@ -195,7 +221,7 @@ class SoundEngine {
     this.initContext();
     this.isMuted = !this.isMuted;
     if (this.masterGain && this.ctx) {
-      this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.8, this.ctx.currentTime);
+      this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 0.85, this.ctx.currentTime);
     }
     return this.isMuted;
   }

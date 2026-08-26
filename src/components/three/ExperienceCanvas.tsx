@@ -2,9 +2,11 @@
 
 import React, { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 import * as THREE from 'three';
-import { FarStars } from './systems/FarStars';
 import { AtmosphericDust } from './systems/AtmosphericDust';
+import { SparkleSystem } from './systems/SparkleSystem';
+import { BokehSystem } from './systems/BokehSystem';
 import { TheLightEntity } from './systems/TheLightEntity';
+import { GlowMistSystem } from './systems/GlowMistSystem';
 import { ConstellationMesh } from './systems/ConstellationMesh';
 import { CandleFlameShader } from './systems/CandleFlameShader';
 import { FireworksEngine } from './systems/FireworksEngine';
@@ -12,8 +14,10 @@ import { FireworksEngine } from './systems/FireworksEngine';
 export interface ExperienceCanvasRef {
   updateScrollProgress: (progress: number, activeScene: number) => void;
   triggerTouchIgnite: () => void;
-  setFlameWaver: (amount: number, intensity: number) => void;
-  triggerFireworks: (x?: number, y?: number) => void;
+  triggerSparkleBurst: (x?: number, y?: number, z?: number, count?: number) => void;
+  emitCandleEmber: (count?: number) => void;
+  setFlameWaver: (waver: number, intensity: number) => void;
+  triggerFireworks: (x?: number, y?: number, z?: number) => void;
   setBlackout: (isBlackout: boolean) => void;
 }
 
@@ -23,9 +27,11 @@ export const ExperienceCanvas = forwardRef<ExperienceCanvasRef, {}>((props, ref)
     renderer: THREE.WebGLRenderer;
     scene: THREE.Scene;
     camera: THREE.PerspectiveCamera;
-    farStars: FarStars;
     dust: AtmosphericDust;
+    sparkles: SparkleSystem;
+    bokeh: BokehSystem;
     theLight: TheLightEntity;
+    glowMist: GlowMistSystem;
     constellation: ConstellationMesh;
     candleFlame: CandleFlameShader;
     fireworks: FireworksEngine;
@@ -33,6 +39,7 @@ export const ExperienceCanvas = forwardRef<ExperienceCanvasRef, {}>((props, ref)
     isBlackout: boolean;
     activeScene: number;
     scrollProgress: number;
+    flameWaver: number;
   } | null>(null);
 
   useImperativeHandle(ref, () => ({
@@ -41,73 +48,95 @@ export const ExperienceCanvas = forwardRef<ExperienceCanvasRef, {}>((props, ref)
       systemsRef.current.scrollProgress = progress;
       systemsRef.current.activeScene = activeScene;
 
-      const { theLight, constellation, candleFlame, camera } = systemsRef.current;
+      const { theLight, constellation, candleFlame, glowMist, camera } = systemsRef.current;
 
-      // 1. Position The Light based on scene milestones
+      // Choreograph The Light position and lighting atmosphere based on 15 scenes
       if (activeScene <= 1) {
-        // Intro & Touch: Near center
-        theLight.setTarget(0, -0.2, -4, 1.2, 1.1);
+        // Scene 00-01: Darkness & Tiny Light
+        theLight.setTarget(0, -0.2, -4, 1.2, 1.0, '#fff9f5');
         constellation.setVisible(0);
         candleFlame.setIntensity(0);
+        glowMist.setGlowTarget(new THREE.Vector3(0, -0.2, -4), 7, '#f7d58a', 0.25);
       } else if (activeScene === 2) {
-        // Constellation: Sweeping to draw birthdate
-        theLight.setTarget(2, 1.5, -8, 1.4, 1.2);
+        // Scene 02: Birthday Constellation 24.08.2000
+        theLight.setTarget(1.8, 1.2, -7, 1.35, 1.15, '#f7d58a');
         constellation.setVisible(1.0);
         candleFlame.setIntensity(0);
+        glowMist.setGlowTarget(new THREE.Vector3(0, 1.0, -8), 12, '#f7d58a', 0.3);
       } else if (activeScene >= 3 && activeScene <= 4) {
-        // Memories: Weaving across left and right
-        const osc = Math.sin(progress * Math.PI * 4);
-        theLight.setTarget(osc * 3.5, 0.5, -6, 0.9, 0.85);
-        constellation.setVisible(0.1);
+        // Scene 03-04: Memories Field (Weaving z-axis flow)
+        const osc = Math.sin(progress * Math.PI * 5);
+        const oscY = Math.cos(progress * Math.PI * 3) * 0.8;
+        theLight.setTarget(osc * 3.2, oscY, -6, 0.95, 0.9, '#f6b7d8');
+        constellation.setVisible(0.05);
         candleFlame.setIntensity(0);
+        glowMist.setGlowTarget(new THREE.Vector3(osc * 2.5, oscY, -6), 10, '#f6b7d8', 0.28);
       } else if (activeScene === 5) {
-        // Dream fragments
-        theLight.setTarget(0, 1.2, -5, 1.0, 0.9);
+        // Scene 05: Dream Fragments (Matcha, Flowers, Book)
+        theLight.setTarget(0, 1.1, -5.2, 1.05, 0.95, '#a8c087');
         constellation.setVisible(0);
         candleFlame.setIntensity(0);
+        glowMist.setGlowTarget(new THREE.Vector3(0, 1.0, -5.2), 9, '#c9b6ff', 0.25);
       } else if (activeScene >= 6 && activeScene <= 7) {
-        // Story Path & Slowdown
-        theLight.setTarget(0, -1.0, -7, 0.7, 0.75);
+        // Scene 06-07: Story Trail & Slowdown
+        theLight.setTarget(0, -0.8, -6.5, 0.75, 0.8, '#c9b6ff');
         constellation.setVisible(0);
         candleFlame.setIntensity(0);
+        glowMist.setGlowTarget(new THREE.Vector3(0, -0.8, -6.5), 11, '#1a1535', 0.2);
       } else if (activeScene >= 8 && activeScene <= 9) {
-        // Wishes to Candle
-        theLight.setTarget(0, 0.8, -5, 1.1, 1.0);
+        // Scene 08-09: Wishes & Wishes to Flame
+        theLight.setTarget(0, 0.5, -4.8, 1.1, 1.0, '#fff9f5');
         constellation.setVisible(0);
-        candleFlame.setIntensity(0.5);
+        candleFlame.setIntensity(activeScene === 9 ? 0.6 : 0.0);
+        glowMist.setGlowTarget(new THREE.Vector3(0, 0.5, -5), 10, '#f7d58a', 0.35);
       } else if (activeScene >= 10 && activeScene <= 11) {
-        // Candle flame active
-        theLight.setTarget(0, 0.6, -4.5, 0.3, 0.5);
+        // Scene 10-11: Candle Flame & Blackout
+        theLight.setTarget(0, 0.3, -4.2, 0.3, 0.5, '#ffd580');
         constellation.setVisible(0);
-        candleFlame.setIntensity(1.0);
+        candleFlame.setIntensity(activeScene === 10 ? 1.0 : 0.0);
+        glowMist.setGlowTarget(new THREE.Vector3(0, 0.3, -4.5), 8, '#fba94b', 0.4);
       } else if (activeScene >= 12) {
-        // After explosion
-        theLight.setTarget(0, 0, -6, 0.8, 0.9);
+        // Scene 12-15: Supernova Explosion & Secret Ending
+        theLight.setTarget(0, 0, -6, 0.85, 0.9, '#f7d58a');
         constellation.setVisible(0);
         candleFlame.setIntensity(0);
+        glowMist.setGlowTarget(new THREE.Vector3(0, 0, -6), 14, '#f7d58a', 0.35);
       }
 
-      // Smooth camera tilt response
-      camera.position.y = -progress * 4.0;
-      camera.position.z = 5.0 + Math.sin(progress * Math.PI) * 1.5;
+      // Smooth camera subtle depth glide
+      camera.position.y = -progress * 3.5;
+      camera.position.z = 5.0 + Math.sin(progress * Math.PI) * 1.2;
     },
 
     triggerTouchIgnite: () => {
       if (!systemsRef.current) return;
-      const { theLight, fireworks } = systemsRef.current;
-      theLight.setTarget(0, 0, -4, 2.0, 1.6);
-      fireworks.burst(0, 0, -5, 60, ['#ffffff', '#f5d77f', '#ffd580']);
+      const { theLight, sparkles, fireworks } = systemsRef.current;
+      theLight.setTarget(0, 0, -4, 2.2, 1.8, '#ffffff');
+      sparkles.emitBurst(new THREE.Vector3(0, 0, -4), 30, ['#ffffff', '#f7d58a', '#ffd580']);
+      fireworks.burst(0, 0, -5, 80, ['#ffffff', '#f7d58a', '#f6b7d8']);
     },
 
-    setFlameWaver: (amount: number, intensity: number) => {
+    triggerSparkleBurst: (x = 0, y = 0, z = -5, count = 20) => {
       if (!systemsRef.current) return;
+      systemsRef.current.sparkles.emitBurst(new THREE.Vector3(x, y, z), count);
+    },
+
+    emitCandleEmber: (count = 2) => {
+      if (!systemsRef.current) return;
+      systemsRef.current.glowMist.emitEmber(new THREE.Vector3(0, 0.3, -4.5), count, true);
+    },
+
+    setFlameWaver: (waver: number, intensity: number) => {
+      if (!systemsRef.current) return;
+      systemsRef.current.flameWaver = waver;
       systemsRef.current.candleFlame.setIntensity(intensity);
     },
 
-    triggerFireworks: (x = 0, y = 1.5) => {
+    triggerFireworks: (x = 0, y = 1.5, z = -7) => {
       if (!systemsRef.current) return;
-      const { fireworks } = systemsRef.current;
-      fireworks.burst(x, y, -7, 240, ['#f5d77f', '#ffd580', '#fba94b', '#f8b4b4', '#89c4f4', '#ffffff']);
+      const { fireworks, sparkles } = systemsRef.current;
+      fireworks.burst(x, y, z, 260, ['#f7d58a', '#ffd580', '#fba94b', '#f6b7d8', '#c9b6ff', '#ffffff']);
+      sparkles.emitBurst(new THREE.Vector3(x, y, z), 40, ['#ffffff', '#f7d58a', '#c9b6ff']);
     },
 
     setBlackout: (isBlackout: boolean) => {
@@ -125,7 +154,7 @@ export const ExperienceCanvas = forwardRef<ExperienceCanvasRef, {}>((props, ref)
 
     // 1. Setup Scene, Camera, Renderer
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2('#040508', 0.025);
+    scene.fog = new THREE.FogExp2('#040508', 0.022);
 
     const camera = new THREE.PerspectiveCamera(
       55,
@@ -137,26 +166,32 @@ export const ExperienceCanvas = forwardRef<ExperienceCanvasRef, {}>((props, ref)
 
     const renderer = new THREE.WebGLRenderer({
       powerPreference: 'high-performance',
-      antialias: false, // Turned off for performance, post-shaders handle softness
+      antialias: false, // Performance optimization for mobile
       alpha: true,
     });
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.8);
     renderer.setPixelRatio(dpr);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor('#040508', 1);
 
     containerRef.current.appendChild(renderer.domElement);
 
-    // 2. Initialize Subsystems
-    const farStars = new FarStars(dpr > 1.5 ? 900 : 500);
-    scene.add(farStars.points);
-
-    const dust = new AtmosphericDust(dpr > 1.5 ? 600 : 350);
+    // 2. Initialize All 5 Particular Systems + Helpers
+    const dust = new AtmosphericDust(dpr > 1.2 ? 750 : 450);
     scene.add(dust.points);
+
+    const sparkles = new SparkleSystem(dpr > 1.2 ? 250 : 150);
+    scene.add(sparkles.points);
+
+    const bokeh = new BokehSystem(dpr > 1.2 ? 28 : 16);
+    scene.add(bokeh.points);
 
     const theLight = new TheLightEntity();
     scene.add(theLight.group);
+
+    const glowMist = new GlowMistSystem();
+    scene.add(glowMist.group);
 
     const constellation = new ConstellationMesh();
     scene.add(constellation.group);
@@ -173,9 +208,11 @@ export const ExperienceCanvas = forwardRef<ExperienceCanvasRef, {}>((props, ref)
       renderer,
       scene,
       camera,
-      farStars,
       dust,
+      sparkles,
+      bokeh,
       theLight,
+      glowMist,
       constellation,
       candleFlame,
       fireworks,
@@ -183,6 +220,7 @@ export const ExperienceCanvas = forwardRef<ExperienceCanvasRef, {}>((props, ref)
       isBlackout: false,
       activeScene: 0,
       scrollProgress: 0,
+      flameWaver: 0,
     };
 
     // 3. Render Loop
@@ -194,7 +232,7 @@ export const ExperienceCanvas = forwardRef<ExperienceCanvasRef, {}>((props, ref)
       const elapsedTime = clock.getElapsedTime();
 
       if (systemsRef.current) {
-        const { isBlackout, scrollProgress } = systemsRef.current;
+        const { isBlackout, scrollProgress, flameWaver, activeScene } = systemsRef.current;
 
         if (isBlackout) {
           renderer.setClearColor('#000000', 1);
@@ -204,12 +242,19 @@ export const ExperienceCanvas = forwardRef<ExperienceCanvasRef, {}>((props, ref)
 
         renderer.setClearColor('#040508', 1);
 
-        farStars.update(elapsedTime);
         dust.update(elapsedTime, scrollProgress);
+        sparkles.update(elapsedTime, delta);
+        bokeh.update(elapsedTime, scrollProgress);
         theLight.update(elapsedTime, delta);
+        glowMist.update(elapsedTime, delta);
         constellation.update(elapsedTime);
-        candleFlame.update(elapsedTime);
+        candleFlame.update(elapsedTime, flameWaver);
         fireworks.update(delta);
+
+        // Ambient flame ember generation in scene 10
+        if (activeScene === 10 && Math.random() < 0.3) {
+          glowMist.emitEmber(new THREE.Vector3(0, 0.3, -4.5), 1, true);
+        }
 
         renderer.render(scene, camera);
       }
@@ -217,7 +262,7 @@ export const ExperienceCanvas = forwardRef<ExperienceCanvasRef, {}>((props, ref)
 
     animate();
 
-    // 4. Handle Window Resize
+    // 4. Resize Handler
     const handleResize = () => {
       if (!systemsRef.current) return;
       const width = window.innerWidth;
@@ -227,7 +272,7 @@ export const ExperienceCanvas = forwardRef<ExperienceCanvasRef, {}>((props, ref)
       camera.updateProjectionMatrix();
 
       renderer.setSize(width, height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
     };
 
     window.addEventListener('resize', handleResize, { passive: true });
@@ -236,9 +281,11 @@ export const ExperienceCanvas = forwardRef<ExperienceCanvasRef, {}>((props, ref)
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animationFrameId);
 
-      farStars.dispose();
       dust.dispose();
+      sparkles.dispose();
+      bokeh.dispose();
       theLight.dispose();
+      glowMist.dispose();
       constellation.dispose();
       candleFlame.dispose();
       fireworks.dispose();
