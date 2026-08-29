@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Vyan's Birthday Town ✨ Chúc Mừng Sinh Nhật!</title>
+    <meta name="description" content="Một hành trình nhỏ xinh phong cách sách tranh nổi cắt giấy 2.5D chúc mừng sinh nhật!" />
+    
+    <!-- Google Fonts for Storybook & Hand-Drawn aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Nunito:ital,wght@0,400;0,600;0,800;1,400;1,700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/src/styles/main.css" />
+    <link rel="stylesheet" href="/src/styles/storybook-ui.css" />
+    <link rel="stylesheet" href="/src/styles/ending.css" />
+  </head>
+  <body>
+    <!-- Main App Frame -->
+    <div id="app" class="storybook-wrapper">
+      
+      <!-- Wooden Book Border Frame (Pop-up Book Aesthetic) -->
+      <div class="book-frame">
+        
+        <!-- Three.js 2.5D Canvas Container -->
+        <div id="canvas-container" class="canvas-container"></div>
+
+        <!-- 2D Overlay FX Canvas (Particles, Fireworks) -->
+        <canvas id="fx-canvas" class="fx-canvas"></canvas>
+
+        <!-- Tap-To-Move Click Ripple Marker -->
+        <div id="click-marker" class="click-marker" style="display: none;">
+          <div class="marker-circle"></div>
+          <div class="marker-star">✦</div>
+        </div>
+
+        <!-- HUD (Top Bar: Star Counter, Compass Quest Hint, Controls) -->
+        <header id="hud" class="hud-layer">
+          <div class="hud-left">
+            <div class="hud-badge star-counter-badge" title="Wish Stars đã thu thập">
+              <span class="star-icon">⭐</span>
+              <span id="star-count" class="badge-text">0 / 5</span>
+            </div>
+            <div id="compass-hint" class="hud-badge compass-badge" title="Mục tiêu tiếp theo">
+              <span class="compass-icon">📍</span>
+              <span id="compass-text" class="badge-text">Bắt đầu hành trình</span>
+            </div>
+          </div>
+
+          <div class="hud-right">
+            <button id="btn-sound" class="hud-btn sound-btn" title="Bật / Tắt âm thanh" aria-label="Toggle Sound">
+              <span class="sound-icon">🔊</span>
+            </button>
+            <button id="btn-restart" class="hud-btn restart-btn" title="Quay về điểm xuất phát" aria-label="Reset Position">
+              <span class="restart-icon">🏠</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- Virtual Joystick Area (Mobile Touch) -->
+        <div id="joystick-zone" class="joystick-zone"></div>
+
+        <!-- Dialogue Box Overlay (Bottom Storybook Letter Card) -->
+        <section id="dialogue-box" class="dialogue-box hidden" aria-live="polite">
+          <div class="dialogue-card">
+            <div class="dialogue-avatar-wrapper">
+              <div id="dialogue-avatar" class="dialogue-avatar">
+                <span class="avatar-emoji">👧</span>
+              </div>
+            </div>
+            <div class="dialogue-content">
+              <div class="dialogue-header">
+                <span id="dialogue-speaker" class="dialogue-speaker">Vyan</span>
+                <span class="dialogue-tag">Storybook</span>
+              </div>
+              <p id="dialogue-text" class="dialogue-text"></p>
+              <div class="dialogue-footer">
+                <span class="dialogue-hint">Chạm vào hộp thoại hoặc nhấn [Space] để tiếp tục</span>
+                <button id="btn-dialogue-next" class="dialogue-next-btn">
+                  <span>Tiếp tục</span>
+                  <span class="next-arrow">▶</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Memory Garden Polaroid Modal -->
+        <div id="memory-modal" class="modal-backdrop hidden">
+          <div class="modal-container polaroid-card">
+            <div class="washi-tape washi-top"></div>
+            <button id="btn-close-memory" class="modal-close-btn" aria-label="Đóng">✕</button>
+            <div class="polaroid-photo-frame">
+              <img id="memory-img" src="" alt="Memory Photo" class="polaroid-img" />
+              <div id="memory-img-fallback" class="polaroid-fallback">
+                <span class="polaroid-icon">📷</span>
+              </div>
+            </div>
+            <div class="polaroid-caption-area">
+              <h3 id="memory-title" class="polaroid-title">Kỷ niệm đáng nhớ</h3>
+              <p id="memory-caption" class="polaroid-caption">Có những ngày thật bình thường, nhưng khi nhìn lại lại thấy ấm áp lạ kỳ...</p>
+              <span id="memory-date" class="polaroid-date">Mùa hè năm ấy</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gift Box Unboxing Modal -->
+        <div id="gift-modal" class="modal-backdrop hidden">
+          <div class="modal-container gift-card">
+            <button id="btn-close-gift" class="modal-close-btn" aria-label="Đóng">✕</button>
+            <div class="gift-animation-box">
+              <div id="gift-box-anim" class="gift-box-icon">🎁</div>
+            </div>
+            <div class="gift-content-area">
+              <span class="gift-badge">MÓN QUÀ TINH THẦN</span>
+              <h3 id="gift-title" class="gift-title">Hộp Quà Bất Ngờ</h3>
+              <p id="gift-message" class="gift-message">Chúc bạn một tuổi mới luôn ngập tràn niềm vui và những điều dịu dàng nhất!</p>
+              <button id="btn-claim-gift" class="action-btn claim-gift-btn">
+                <span>Nhận quà & Tiếp tục ✨</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grand Finale Cake & Ending Ceremony Overlay -->
+        <div id="ending-overlay" class="ending-overlay hidden">
+          <div class="ending-container">
+            
+            <!-- Step 1: Make a Wish & Blow Candle -->
+            <div id="wish-step" class="wish-step">
+              <div class="cake-illustration-card">
+                <div class="cake-sparkles">✨ ⭐ ✨</div>
+                <div id="cake-icon" class="cake-icon">🎂</div>
+                <div id="candle-flame" class="candle-flame">🔥</div>
+              </div>
+              <h2 class="wish-title">Ước một điều ước sinh nhật ✨</h2>
+              <p class="wish-desc">Hãy nghĩ về điều bạn mong muốn nhất trong tuổi mới...</p>
+              
+              <!-- Hold Button with Animated SVG Progress Ring -->
+              <div class="hold-button-wrapper">
+                <svg class="hold-ring-svg" width="160" height="160" viewBox="0 0 160 160">
+                  <circle class="hold-ring-bg" cx="80" cy="80" r="70" />
+                  <circle id="hold-ring-fill" class="hold-ring-fill" cx="80" cy="80" r="70" />
+                </svg>
+                <button id="btn-hold-wish" class="hold-wish-btn" aria-label="Chạm hoặc giữ để thổi nến">
+                  <span class="hold-icon">💨</span>
+                  <span class="hold-text">Thổi nến ước nguyện</span>
+                </button>
+              </div>
+              <span class="hold-instruction">Chạm hoặc giữ để thổi nến ✨</span>
+            </div>
+
+            <!-- Step 2: Happy Birthday Celebration & Secret Message Reveal -->
+            <div id="celebration-step" class="celebration-step hidden">
+              <div class="confetti-burst-bg"></div>
+              <div class="celebration-card">
+                <div class="birthday-crown">👑</div>
+                <h1 class="hbd-heading">HAPPY BIRTHDAY!</h1>
+                <h2 id="recipient-celebration-name" class="recipient-name">Vyan ✨</h2>
+                <p id="celebration-subtext" class="celebration-subtext">
+                  Chúc bạn tuổi mới luôn rực rỡ, hạnh phúc và bình yên!
+                </p>
+                <div class="celebration-actions">
+                  <button id="btn-open-lantern-festival" class="action-btn lantern-celebrate-btn">
+                    <span>🏮 Thả Đèn Lồng Ước Nguyện ✨</span>
+                  </button>
+                  <button id="btn-explore-freely" class="action-btn secondary-btn">
+                    <span>Dạo chơi tiếp 🌸</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Sky Lantern Festival Fullscreen Interactive Overlay -->
+        <div id="lantern-festival-overlay" class="lantern-festival-overlay hidden">
+          <!-- Canvas for Stars, Rising Lanterns, and Particles -->
+          <canvas id="lantern-canvas" class="lantern-canvas"></canvas>
+
+          <!-- Top Header Info -->
+          <header class="lantern-header">
+            <div class="lantern-title-badge">
+              <span class="lantern-icon">🏮</span>
+              <span>Lễ Hội Thả Đèn Lồng Sinh Nhật Vyan ✨</span>
+            </div>
+            <button id="btn-back-from-lanterns" class="modal-close-btn lantern-close-btn" aria-label="Quay lại">✕</button>
+          </header>
+
+          <!-- Bottom Streamlined Interaction Footer -->
+          <div class="lantern-streamlined-footer">
+            <div class="sky-hint-pill">
+              <span>✨ Chạm bất cứ đâu trên màn hình để thắp thêm đèn lồng & bắn pháo hoa ✨</span>
+            </div>
+            <button id="btn-explore-after-lanterns" class="action-btn lantern-return-btn">
+              <span>🌸 Dạo chơi tiếp trong thị trấn</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Initial Welcome / Start Journey Prompt -->
+        <div id="welcome-modal" class="welcome-modal">
+          <div class="welcome-card">
+            <div class="welcome-deco">🎈 🎂 🎁</div>
+            <h1 id="welcome-title" class="welcome-title">Vyan's Birthday Town</h1>
+            <p id="welcome-subtitle" class="welcome-subtitle">Một hành trình nhỏ được tạo ra để chúc mừng ngày sinh nhật của Vyan!</p>
+            <div class="welcome-guide">
+              <div class="guide-item">
+                <span class="guide-icon">👆</span>
+                <div class="guide-text">
+                  <span>Chạm màn hình hoặc dùng phím di chuyển:</span>
+                  <div class="key-badges-row">
+                    <span class="key-group" title="Phím WASD">
+                      <kbd class="key-cap">W</kbd>
+                      <kbd class="key-cap">A</kbd>
+                      <kbd class="key-cap">S</kbd>
+                      <kbd class="key-cap">D</kbd>
+                    </span>
+                    <span class="key-divider">hoặc</span>
+                    <span class="key-group" title="4 Phím Điều Hướng">
+                      <kbd class="key-cap">⬆️</kbd>
+                      <kbd class="key-cap">⬅️</kbd>
+                      <kbd class="key-cap">⬇️</kbd>
+                      <kbd class="key-cap">➡️</kbd>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="guide-item">
+                <span class="guide-icon">⭐</span>
+                <span class="guide-text">Thu thập Wish Stars, mở khung ảnh & hộp quà</span>
+              </div>
+            </div>
+            <button id="btn-start-game" class="action-btn start-game-btn">
+              <span>Bắt đầu hành trình ✨</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Main Entry Module -->
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

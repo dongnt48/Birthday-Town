@@ -1,0 +1,498 @@
+/* ==========================================================================
+   Birthday Storybook Town - Grand Finale & Secret Letter Styles
+   ========================================================================== */
+
+.ending-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(30, 15, 20, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 40;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  animation: fade-in-ending 0.5s ease-out;
+}
+
+@keyframes fade-in-ending {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ending-container {
+  max-width: 540px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Step 1: Wish & Blow Candle */
+.wish-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cake-illustration-card {
+  position: relative;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.cake-sparkles {
+  font-size: 20px;
+  color: #FFEAA7;
+  animation: twinkle 1.5s infinite alternate;
+}
+
+.cake-icon {
+  font-size: 96px;
+  filter: drop-shadow(0 8px 24px rgba(255, 170, 165, 0.4));
+  animation: gentle-wobble 3s infinite ease-in-out;
+}
+
+.candle-flame {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 32px;
+  animation: flame-flicker 0.6s infinite alternate;
+}
+
+@keyframes flame-flicker {
+  0% { transform: translateX(-50%) scale(1) rotate(-3deg); filter: drop-shadow(0 0 10px #FF7675); }
+  100% { transform: translateX(-50%) scale(1.15) rotate(3deg); filter: drop-shadow(0 0 18px #FFEAA7); }
+}
+
+@keyframes gentle-wobble {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-2deg); }
+  75% { transform: rotate(2deg); }
+}
+
+.wish-title {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  color: #FFFDF9;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.wish-desc {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: #F9D7C4;
+  margin-bottom: 32px;
+}
+
+/* Hold Button with Progress Ring */
+.hold-button-wrapper {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.hold-ring-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+
+.hold-ring-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.15);
+  stroke-width: 6;
+}
+
+.hold-ring-fill {
+  fill: none;
+  stroke: #FFAAA5;
+  stroke-width: 6;
+  stroke-dasharray: 440;
+  stroke-dashoffset: 440;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.05s linear;
+}
+
+.hold-wish-btn {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFAAA5 0%, #FF8B94 100%);
+  border: 4px solid #FFF;
+  color: #FFF;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  box-shadow: 0 0 25px rgba(255, 139, 148, 0.6);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.hold-wish-btn:active, .hold-wish-btn.holding {
+  transform: scale(0.94);
+  box-shadow: 0 0 35px rgba(255, 170, 165, 0.9);
+}
+
+.hold-icon {
+  font-size: 32px;
+  pointer-events: none;
+}
+
+.hold-text {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.hold-instruction {
+  font-size: 14px;
+  color: #E0D0C0;
+  font-style: italic;
+  pointer-events: none;
+}
+
+/* Step 2: Celebration Card */
+.celebration-step {
+  animation: pop-celebration 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes pop-celebration {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.celebration-card {
+  background: var(--paper-cream);
+  border: 4px solid #FFAAA5;
+  border-radius: var(--radius-lg);
+  padding: 40px 32px;
+  box-shadow: var(--shadow-diorama), 0 0 50px rgba(255, 234, 167, 0.4);
+  position: relative;
+}
+
+.celebration-card::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  border: 2px dashed #F9D7C4;
+  border-radius: calc(var(--radius-lg) - 6px);
+  pointer-events: none;
+}
+
+.birthday-crown {
+  font-size: 52px;
+  animation: crown-bounce 1.5s infinite alternate ease-in-out;
+  margin-bottom: 8px;
+}
+
+@keyframes crown-bounce {
+  from { transform: translateY(0) rotate(-6deg); }
+  to { transform: translateY(-8px) rotate(6deg); }
+}
+
+.hbd-heading {
+  font-family: var(--font-heading);
+  font-size: 36px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #E65100, #E91E63, #9C27B0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+
+.recipient-name {
+  font-family: var(--font-display);
+  font-size: 38px;
+  color: #D35400;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.celebration-subtext {
+  font-family: var(--font-body);
+  font-size: 17px;
+  color: var(--text-medium);
+  line-height: 1.5;
+  margin-bottom: 32px;
+}
+
+.celebration-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.secret-letter-btn {
+  font-size: 18px;
+  padding: 14px 36px;
+  background: linear-gradient(135deg, #FF7675 0%, #D63031 100%);
+  box-shadow: 0 6px 20px rgba(214, 48, 49, 0.4);
+}
+
+.secret-letter-btn span,
+.celebration-actions button span {
+  pointer-events: none;
+}
+
+/* Secret Letter Modal Backdrop (must sit above #ending-overlay z-index 40) */
+#secret-letter-modal {
+  z-index: 60 !important;
+}
+
+.letter-card {
+  position: relative;
+  background: #FFFDF9;
+  border: 3px solid #D4A373;
+  border-radius: var(--radius-md);
+  padding: 36px 28px;
+  max-width: 520px;
+  width: 100%;
+  box-shadow: var(--shadow-diorama);
+  background-image: radial-gradient(#F3E5D8 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.letter-stamp {
+  position: absolute;
+  top: 14px;
+  left: 18px;
+  font-size: 28px;
+  border: 2px dashed #FF8B94;
+  border-radius: 4px;
+  padding: 2px 6px;
+  background: #FFF0F2;
+}
+
+.letter-paper {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.letter-title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  color: #8A4B38;
+  border-bottom: 2px solid #FAEDCD;
+  padding-bottom: 8px;
+}
+
+.letter-scroll-body {
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.letter-text {
+  font-family: var(--font-display);
+  font-size: 21px;
+  line-height: 1.6;
+  color: var(--text-dark);
+  white-space: pre-line;
+  text-align: left;
+}
+
+.letter-footer {
+  margin-top: 14px;
+  border-top: 1px dashed #D4A373;
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+}
+
+.letter-sender {
+  font-family: var(--font-display);
+  font-size: 19px;
+  color: #8A4B38;
+  font-weight: bold;
+}
+
+.letter-note {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  color: #C39B78;
+}
+
+@media (max-width: 600px) {
+  .hbd-heading {
+    font-size: 28px;
+  }
+  .recipient-name {
+    font-size: 30px;
+  }
+  .celebration-card {
+    padding: 28px 18px;
+  }
+  .letter-text {
+    font-size: 18px;
+  }
+}
+
+/* ==========================================================================
+   Sky Lantern Festival Fullscreen Overlay Styles
+   ========================================================================== */
+
+.lantern-celebrate-btn {
+  background: linear-gradient(135deg, #FF7675 0%, #E17055 50%, #FDCB6E 100%) !important;
+  box-shadow: 0 4px 20px rgba(225, 112, 85, 0.6) !important;
+  animation: pulse-lantern-btn 1.6s infinite ease-in-out;
+}
+
+@keyframes pulse-lantern-btn {
+  0%, 100% { transform: scale(1); box-shadow: 0 4px 18px rgba(225, 112, 85, 0.5); }
+  50% { transform: scale(1.05); box-shadow: 0 6px 26px rgba(253, 203, 110, 0.85); }
+}
+
+.lantern-festival-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 60;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  animation: fade-in-lanterns 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fade-in-lanterns {
+  from { opacity: 0; transform: scale(1.02); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.lantern-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto;
+  cursor: crosshair;
+}
+
+/* Header */
+.lantern-header {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+}
+
+.lantern-title-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(22, 26, 54, 0.75);
+  backdrop-filter: blur(8px);
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 234, 167, 0.3);
+  color: #FFEAA7;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.lantern-icon {
+  font-size: 18px;
+}
+
+.lantern-close-btn {
+  background: rgba(22, 26, 54, 0.75) !important;
+  color: #FFF !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.lantern-close-btn:hover {
+  background: #FF7675 !important;
+  border-color: #FF7675 !important;
+}
+
+/* Streamlined Bottom Footer */
+.lantern-streamlined-footer {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+/* Hint Pill */
+.sky-hint-pill {
+  position: relative;
+  z-index: 10;
+  background: rgba(22, 26, 54, 0.75);
+  backdrop-filter: blur(8px);
+  padding: 8px 20px;
+  border-radius: var(--radius-pill);
+  border: 1px dashed rgba(255, 234, 167, 0.5);
+  color: #FFEAA7;
+  font-size: 13px;
+  font-family: var(--font-heading);
+  letter-spacing: 0.3px;
+  animation: hint-float 3s infinite ease-in-out;
+  pointer-events: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes hint-float {
+  0%, 100% { transform: translateY(0); opacity: 0.9; }
+  50% { transform: translateY(-4px); opacity: 1; }
+}
+
+.lantern-return-btn {
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: #8A4B38 !important;
+  border: 2px solid #F9D7C4 !important;
+  padding: 10px 24px !important;
+  font-size: 14px !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25) !important;
+}
+
+.lantern-return-btn:hover {
+  background: #FFF !important;
+  border-color: #FF8B94 !important;
+  transform: translateY(-2px) scale(1.05) !important;
+}
+
+@media (max-width: 600px) {
+  .sky-hint-pill {
+    font-size: 11px;
+    padding: 6px 14px;
+    text-align: center;
+  }
+}
+
