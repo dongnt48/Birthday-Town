@@ -720,22 +720,69 @@
 
 /* Mobile responsive adjustments */
 @media (max-width: 600px) {
+  /* Top HUD Header Mobile Optimization */
+  .hud-layer {
+    top: calc(10px + env(safe-area-inset-top, 0px));
+    left: calc(10px + env(safe-area-inset-left, 0px));
+    right: calc(10px + env(safe-area-inset-right, 0px));
+    gap: 6px;
+  }
+
+  .hud-left {
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .hud-right {
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .hud-badge {
+    padding: 6px 10px;
+    font-size: 12px;
+    border-width: 1.5px;
+  }
+
+  .star-counter-badge {
+    flex-shrink: 0;
+  }
+
+  .compass-badge {
+    min-width: 0;
+    max-width: calc(100vw - 200px);
+  }
+
+  .compass-badge .badge-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .hud-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+    border-width: 1.5px;
+  }
+
   .dialogue-box {
-    bottom: 12px;
-    width: calc(100% - 24px);
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    width: calc(100% - 20px);
   }
   .dialogue-card {
-    padding: 12px 16px;
-    gap: 12px;
+    padding: 12px 14px;
+    gap: 10px;
   }
   .dialogue-avatar {
-    width: 48px;
-    height: 48px;
-    font-size: 24px;
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
   }
   .dialogue-text {
-    font-size: 15px;
-    min-height: 40px;
+    font-size: 14.5px;
+    min-height: 38px;
   }
   .welcome-card {
     padding: 24px 18px;
