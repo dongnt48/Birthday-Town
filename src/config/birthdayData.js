@@ -128,7 +128,7 @@ export const birthdayConfig = {
       title: "Cô gái nhỏ hạnh phúc",
       date: "Mỗi ngày bình yên",
       icon: "🌻",
-      image: "/images/photo1.jpg",
+      image: "./images/photo1.jpg",
       objectPosition: "center top", // Vị trí căn chỉnh ảnh: "center top", "center center", "center 15%"
       caption: "Chúc cho cô gái nhỏ này luôn được cưng chiều, vui vẻ và ngập tràn hạnh phúc mỗi ngày! ✨"
     },
@@ -137,7 +137,7 @@ export const birthdayConfig = {
       title: "Chuyến đi ngập tràn tiếng cười",
       date: "Một ngày cuối tuần",
       icon: "🏖️",
-      image: "/images/photo2.jpg",
+      image: "./images/photo2.jpg",
       objectPosition: "center top",
       caption: "Dù là đi đâu, chỉ cần có nụ cười của Vyan thì mọi cảnh vật đều trở nên rực rỡ hơn rất nhiều."
     },
@@ -146,7 +146,7 @@ export const birthdayConfig = {
       title: "Bên ngoài lạnh lùng",
       date: "Một ngày bất ổn",
       icon: "🕶️",
-      image: "/images/photo3.jpg",
+      image: "./images/photo3.jpg",
       objectPosition: "center top",
       caption: "Bên ngoài tỏ vẻ lạnh lùng sang chảnh, bên trong thì 'hâm hâm' có tiếng trong giang hồ! 🤪🕶️"
     },
@@ -155,7 +155,7 @@ export const birthdayConfig = {
       title: "Khoảnh khắc đáng yêu",
       date: "Mỗi ngày trôi qua",
       icon: "✨",
-      image: "/images/photo4.jpg",
+      image: "./images/photo4.jpg",
       objectPosition: "center top",
       caption: "Mong Vyan luôn giữ được sự hồn nhiên, đáng yêu và trái tim nhân hậu này nhé!"
     }
